@@ -11,7 +11,7 @@ def files_from_directory(directory):
     :param directory: string filename that will be searched
     :return: list of string of filenames
     """
-    return [f for f in os.listdir(directory) if os.isfile('{0}{1}'.format(directory, f))]
+    return [f'{directory}{f}' for f in os.listdir(directory) if os.path.isfile(f'{directory}{f}')]
 
 
 def map_file_apply(file_list, apply_func, apply_func_args):

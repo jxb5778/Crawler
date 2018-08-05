@@ -1,8 +1,7 @@
-from Aggregator import Aggregator
 import pandas as pd
 
 
-def pandas_query(reader_agg, query_result_agg, pandas_query, value_list=[]):
+def pandas_query(reader_agg, query_result_agg, query, value_list=[]):
     """ Helper function that queries the reader and concatenated the results to the query return
 
     :param reader_agg: v
@@ -12,13 +11,13 @@ def pandas_query(reader_agg, query_result_agg, pandas_query, value_list=[]):
     :return: None
     """
 
-    reader_agg.return_value = reader_agg.return_value.query(pandas_query)
+    reader_agg.return_value = reader_agg.return_value.query(query)
     query_result_agg.return_value = pd.concat([query_result_agg.return_value, reader_agg.return_value], sort=True)
 
     return
 
 
-def crawler_csv_query(file, reader_agg, filter_agg, query_result_agg, pandas_query, value_list=[]):
+def crawler_csv_query(file, reader_agg, filter_agg, query_result_agg, query, value_list=[]):
     """ Crawler job that reads in csv files and aggregates query results
 
     :param file: string file path/ filename that is being operated on
@@ -31,12 +30,12 @@ def crawler_csv_query(file, reader_agg, filter_agg, query_result_agg, pandas_que
     """
 
     reader_agg.return_value = pd.read_csv(file, encoding='latin1')
-    pandas_query(reader_agg=reader_agg, query_result_agg=query_result_agg, pandas_query=pandas_query)
+    pandas_query(reader_agg=reader_agg, query_result_agg=query_result_agg, query=query)
 
     return
 
 
-def crawler_parquet_query(file, reader_agg, filter_agg, query_result_agg, pandas_query, value_list=[]):
+def crawler_parquet_query(file, reader_agg, filter_agg, query_result_agg, query, value_list=[]):
     """ Crawler job that reads in parquet files and aggregates query results
 
     :param file: string file path/ filename that is being operated on
@@ -49,6 +48,6 @@ def crawler_parquet_query(file, reader_agg, filter_agg, query_result_agg, pandas
     """
 
     reader_agg.return_value = pd.read_parquet(file, engine='pyarrow')
-    pandas_query(reader_agg=reader_agg, query_result_agg=query_result_agg, pandas_query=pandas_query)
+    pandas_query(reader_agg=reader_agg, query_result_agg=query_result_agg, query=query)
 
     return

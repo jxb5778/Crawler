@@ -5,6 +5,7 @@ Date- July 28, 2018
 
 from Crawler.crawler_API_lib import *
 from Crawler.crawler_lib import *
+import multiprocessing as mp
 
 # result_filename needs to be provided to provide query results
 
@@ -17,5 +18,5 @@ if __name__ == '__main__':
             'value_list': [1, 2, 3, 4, 5]
         },
         result_filename='',
-        count_processes=8
+        count_processes=mp.cpu_count()
     )
