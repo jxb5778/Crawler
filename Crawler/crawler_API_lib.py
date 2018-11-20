@@ -30,10 +30,13 @@ def map_file_apply(file_list, apply_func, apply_func_args):
     vapply_func = np.vectorize(apply_func)
     vapply_func(file_list, crawler, **apply_func_args)
 
-    return pd.concat(crawler.query_return)
+    if not crawler.query_return:
+        return
+    else:
+        return pd.concat(crawler.query_return)
 
 
-def run_crawl_job(input_files, apply_func, apply_func_args, result_filename='', count_processes=8):
+def run_crawl_job(input_files, apply_func, apply_func_args, result_filename='', return_df=False, count_processes=8):
     """ Crawl jobs provide ease in concurrently interacting with large sets of data in a filesystem
 
     :param input_files: list of files to be operated on
@@ -57,10 +60,17 @@ def run_crawl_job(input_files, apply_func, apply_func_args, result_filename='', 
         ) for file_list in split_file_list
     ]
 
-    outputs.value = [p.get for p in results]
-    outputs.value = pd.concat(outputs.value, sort=True)
-
     if result_filename != '':
+        outputs.value = [p.get for p in results]
         outputs.value.to_csv(result_filename, index=False)
+        return
 
-    return outputs.value
+    if return_df:
+        outputs.value = [p.get for p in results]
+        outputs.value = pd.concat(outputs.value, sort=True)
+        return outputs.value
+
+    else:
+        for p in results:
+            p.get()
+        return

@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 
 def pandas_query(crawler, query, value_list=[]):
@@ -50,5 +51,14 @@ def crawler_parquet_query(file, crawler, query, value_list=[]):
 
     crawler.reader = pd.read_parquet(file, engine='pyarrow')
     pandas_query(crawler=crawler, query=query, value_list=value_list)
+
+    return
+
+
+def crawler_csv_to_parquet(file, crawler, dest_dir):
+    print(file)
+    crawler.reader = pd.read_csv(file, low_memory=False)
+    dest_filename = '{0}{1}.parquet'.format(dest_dir, os.path.basename(file).replace('.csv', ''))
+    crawler.reader.to_parquet(dest_filename, engine='pyarrow')
 
     return
