@@ -61,12 +61,21 @@ def run_crawl_job(input_files, apply_func, apply_func_args, result_filename='', 
     ]
 
     if result_filename != '':
-        outputs.value = [p.get for p in results]
+        outputs.value = []
+
+        for p in results:
+            outputs.value.append(p.get())
+
+        outputs.value = pd.concat(outputs.value, sort=True)
         outputs.value.to_csv(result_filename, index=False)
         return
 
     if return_df:
-        outputs.value = [p.get for p in results]
+        outputs.value = []
+
+        for p in results:
+            outputs.value.append(p.get())
+
         outputs.value = pd.concat(outputs.value, sort=True)
         return outputs.value
 
